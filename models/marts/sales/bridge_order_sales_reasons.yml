@@ -7,7 +7,7 @@ models:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
             - nk_sales_order
-            - fk_sales_reason
+            - nk_sales_reason
     columns:
       - name: sk_order_sales_reason
         description: "Surrogate key of the order and sales reason pair."
@@ -23,8 +23,8 @@ models:
               to: ref('stg_sales_order_header')
               field: nk_sales_order
 
-      - name: fk_sales_reason
-        description: "Surrogate key of the sales reason."
+      - name: nk_sales_reason
+        description: "Natural key of the sales reason. Links to the sales reason dimension."
         data_tests:
           - not_null
           - relationships:

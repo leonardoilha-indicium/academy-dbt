@@ -16,7 +16,7 @@ with
 
     , final as (
         select
-            {{ dbt_utils.generate_surrogate_key(['nk_order_status']) }} as sk_order_status
+            nk_order_status as sk_order_status
             , nk_order_status
             , nm_order_status
         from statuses

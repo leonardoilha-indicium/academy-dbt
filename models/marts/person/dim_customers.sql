@@ -25,7 +25,7 @@ with
 
     , final as (
         select
-            {{ dbt_utils.generate_surrogate_key(['customer.nk_customer']) }} as sk_customer
+            customer.nk_customer as sk_customer
             , customer.nk_customer
             , case
                 when store.nk_store is not null then 'Store'

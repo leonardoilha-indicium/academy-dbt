@@ -30,7 +30,7 @@ with
 
     , final as (
         select
-            {{ dbt_utils.generate_surrogate_key(['nk_sales_reason']) }} as sk_sales_reason
+            nk_sales_reason as sk_sales_reason
             , nk_sales_reason
             , nm_sales_reason
             , ds_sales_reason_type

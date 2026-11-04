@@ -16,7 +16,7 @@ with
 
     , final as (
         select
-            {{ dbt_utils.generate_surrogate_key(['product.nk_product']) }} as sk_product
+            product.nk_product as sk_product
             , product.nk_product
             , product.nm_product
             , product.cd_product

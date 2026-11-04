@@ -33,58 +33,53 @@ models:
               to: ref('stg_sales_order_header')
               field: nk_sales_order
 
-      - name: fk_product
-        description: "Foreign key to the product dimension."
+      - name: nk_product
+        description: "Natural key of the product. Links to the product dimension."
         data_tests:
           - not_null
           - relationships:
               to: ref('dim_products')
               field: sk_product
 
-      - name: fk_customer
-        description: "Foreign key to the customer dimension."
+      - name: nk_customer
+        description: "Natural key of the customer. Links to the customer dimension."
         data_tests:
           - not_null
           - relationships:
               to: ref('dim_customers')
               field: sk_customer
 
-      - name: fk_date
-        description: "Foreign key to the date dimension, based on the order date."
-        data_tests:
-          - not_null
-          - relationships:
-              to: ref('dim_dates')
-              field: sk_date
-
-      - name: fk_geography
-        description: "Foreign key to the geography dimension, based on the ship-to address."
-        data_tests:
-          - not_null
-          - relationships:
-              to: ref('dim_geographies')
-              field: sk_geography
-
-      - name: fk_credit_card
-        description: "Foreign key to the credit card dimension. Points to the Unknown member when the order has no card."
+      - name: nk_credit_card
+        description: "Natural key of the credit card. Links to the credit card dimension. Is -1 (Unknown member) when the order has no card."
         data_tests:
           - not_null
           - relationships:
               to: ref('dim_credit_cards')
               field: sk_credit_card
 
-      - name: fk_order_status
-        description: "Foreign key to the order status dimension."
+      - name: nk_order_status
+        description: "Natural key of the order status. Links to the order status dimension."
         data_tests:
           - not_null
           - relationships:
               to: ref('dim_order_statuses')
               field: sk_order_status
 
-      - name: dt_order
-        description: "Date the order was placed."
+      - name: fk_geography
+        description: "Foreign key to the geography dimension (state or province plus city), based on the ship-to address."
         data_tests:
           - not_null
+          - relationships:
+              to: ref('dim_geographies')
+              field: sk_geography
+
+      - name: dt_order
+        description: "Date the order was placed. Links to the date dimension."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_dates')
+              field: sk_date
 
       - name: is_online_order
         description: "True when the order was placed online, false when placed by a salesperson."

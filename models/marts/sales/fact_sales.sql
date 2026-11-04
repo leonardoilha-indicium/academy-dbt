@@ -49,12 +49,11 @@ with
             nk_sales_order_detail as sk_sales_order_detail
             , nk_sales_order_detail
             , nk_sales_order
-            , nk_product as fk_product
-            , nk_customer as fk_customer
-            , dt_order as fk_date
+            , nk_product
+            , nk_customer
+            , nk_credit_card
+            , nk_order_status
             , {{ dbt_utils.generate_surrogate_key(['nk_state_province', 'nm_city']) }} as fk_geography
-            , nk_credit_card as fk_credit_card
-            , nk_order_status as fk_order_status
             , dt_order
             , is_online_order
             , qt_order

@@ -23,7 +23,7 @@ with
         select
             {{ dbt_utils.generate_surrogate_key(['nk_sales_order', 'nk_sales_reason']) }} as sk_order_sales_reason
             , nk_sales_order
-            , {{ dbt_utils.generate_surrogate_key(['nk_sales_reason']) }} as fk_sales_reason
+            , nk_sales_reason
         from order_reasons
     )
 

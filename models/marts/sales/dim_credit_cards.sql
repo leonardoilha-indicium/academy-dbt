@@ -27,7 +27,7 @@ with
 
     , final as (
         select
-            {{ dbt_utils.generate_surrogate_key(['nk_credit_card']) }} as sk_credit_card
+            nk_credit_card as sk_credit_card
             , nk_credit_card
             , ds_card_type
         from unioned
