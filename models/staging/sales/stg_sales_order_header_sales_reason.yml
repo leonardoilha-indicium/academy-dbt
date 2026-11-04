@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: stg_sales_order_header_sales_reason
+    description: "Link between orders and sales reasons. An order can have several reasons."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - sales_order_id
+            - sales_reason_id
+    columns:
+      - name: sales_order_id
+        description: "Order."
+        data_tests:
+          - not_null
+
+      - name: sales_reason_id
+        description: "Sales reason."
+        data_tests:
+          - not_null

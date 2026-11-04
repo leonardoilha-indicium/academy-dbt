@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: stg_customer
+    description: "Customers, which can be people or stores."
+    columns:
+      - name: customer_id
+        description: "Primary key of the customer."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: person_id
+        description: "Linked person. Null for store customers."
+
+      - name: store_id
+        description: "Linked store. Null for person customers."
+
+      - name: territory_id
+        description: "Sales territory of the customer."

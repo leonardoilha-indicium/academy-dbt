@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: stg_sales_order_detail
+    description: "Sales order lines with renamed and typed columns. One row per order line."
+    columns:
+      - name: sales_order_detail_id
+        description: "Primary key of the order line."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: sales_order_id
+        description: "Order the line belongs to."
+        data_tests:
+          - not_null
+
+      - name: product_id
+        description: "Product sold."
+        data_tests:
+          - not_null
+
+      - name: special_offer_id
+        description: "Special offer applied to the line."
+
+      - name: order_qty
+        description: "Quantity sold."
+        data_tests:
+          - not_null
+
+      - name: unit_price
+        description: "Unit price before discounts."
+        data_tests:
+          - not_null
+
+      - name: unit_price_discount
+        description: "Discount as a fraction of the unit price."
+        data_tests:
+          - not_null

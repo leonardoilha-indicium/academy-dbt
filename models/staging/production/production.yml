@@ -1,0 +1,55 @@
+version: 2
+
+sources:
+  - name: production
+    description: "Raw Adventure Works product data, loaded from seeds into the adventure_works schema."
+    database: adventure_works_dw
+    schema: adventure_works
+
+    tables:
+      - name: product
+        description: "Product catalog."
+        columns:
+          - name: productid
+            description: "Primary key of the product."
+            data_tests:
+              - unique
+              - not_null
+
+          - name: name
+            description: "Product name."
+            data_tests:
+              - not_null
+
+          - name: productsubcategoryid
+            description: "Subcategory of the product. Can be null."
+            data_tests:
+              - relationships:
+                  to: source('production', 'productsubcategory')
+                  field: productsubcategoryid
+
+      - name: productsubcategory
+        description: "Product subcategories."
+        columns:
+          - name: productsubcategoryid
+            description: "Primary key of the subcategory."
+            data_tests:
+              - unique
+              - not_null
+
+          - name: productcategoryid
+            description: "Category the subcategory belongs to."
+            data_tests:
+              - not_null
+              - relationships:
+                  to: source('production', 'productcategory')
+                  field: productcategoryid
+
+      - name: productcategory
+        description: "Product categories."
+        columns:
+          - name: productcategoryid
+            description: "Primary key of the category."
+            data_tests:
+              - unique
+              - not_null

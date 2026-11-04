@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: stg_address
+    description: "Billing and shipping addresses."
+    columns:
+      - name: address_id
+        description: "Primary key of the address."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: state_province_id
+        description: "State or province of the address."
+        data_tests:
+          - not_null
+
+      - name: city_name
+        description: "City name."

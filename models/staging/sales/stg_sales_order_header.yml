@@ -1,0 +1,55 @@
+version: 2
+
+models:
+  - name: stg_sales_order_header
+    description: "Sales order headers with renamed and typed columns. One row per order."
+    columns:
+      - name: sales_order_id
+        description: "Primary key of the order."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: customer_id
+        description: "Customer who placed the order."
+        data_tests:
+          - not_null
+
+      - name: territory_id
+        description: "Sales territory of the order."
+
+      - name: bill_to_address_id
+        description: "Billing address."
+
+      - name: ship_to_address_id
+        description: "Shipping address."
+        data_tests:
+          - not_null
+
+      - name: credit_card_id
+        description: "Credit card used. Null when not informed."
+
+      - name: order_date
+        description: "Date the order was placed."
+        data_tests:
+          - not_null
+
+      - name: order_status
+        description: "Order status code (1 to 6)."
+        data_tests:
+          - not_null
+
+      - name: is_online_order
+        description: "True when the order was placed online."
+
+      - name: subtotal_amount
+        description: "Order subtotal, net of discounts."
+
+      - name: tax_amount
+        description: "Order tax amount."
+
+      - name: freight_amount
+        description: "Order freight amount."
+
+      - name: total_due_amount
+        description: "Total due (subtotal + tax + freight)."

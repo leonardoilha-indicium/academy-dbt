@@ -1,0 +1,60 @@
+version: 2
+
+sources:
+  - name: person
+    description: "Raw Adventure Works person and address data, loaded from seeds into the adventure_works schema."
+    database: adventure_works_dw
+    schema: adventure_works
+
+    tables:
+      - name: person
+        description: "People, used to get the name of individual customers."
+        columns:
+          - name: businessentityid
+            description: "Primary key of the person."
+            data_tests:
+              - unique
+              - not_null
+
+      - name: address
+        description: "Billing and shipping addresses."
+        columns:
+          - name: addressid
+            description: "Primary key of the address."
+            data_tests:
+              - unique
+              - not_null
+
+          - name: stateprovinceid
+            description: "State or province of the address."
+            data_tests:
+              - not_null
+              - relationships:
+                  to: source('person', 'stateprovince')
+                  field: stateprovinceid
+
+      - name: stateprovince
+        description: "States and provinces."
+        columns:
+          - name: stateprovinceid
+            description: "Primary key of the state or province."
+            data_tests:
+              - unique
+              - not_null
+
+          - name: countryregioncode
+            description: "Code of the country the state or province belongs to."
+            data_tests:
+              - not_null
+              - relationships:
+                  to: source('person', 'countryregion')
+                  field: countryregioncode
+
+      - name: countryregion
+        description: "Countries and regions."
+        columns:
+          - name: countryregioncode
+            description: "Primary key (code) of the country."
+            data_tests:
+              - unique
+              - not_null

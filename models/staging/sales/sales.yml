@@ -1,0 +1,189 @@
+version: 2
+
+sources:
+  - name: sales
+    description: "Raw Adventure Works sales data, loaded from seeds into the adventure_works schema."
+    database: adventure_works_dw
+    schema: adventure_works
+
+    tables:
+      - name: salesorderheader
+        description: "Sales order headers. One row per order."
+        columns:
+          - name: salesorderid
+            description: "Primary key of the order."
+            data_tests:
+              - unique
+              - not_null
+
+          - name: orderdate
+            description: "Date the order was placed."
+            data_tests:
+              - not_null
+
+          - name: status
+            description: "Order status: 1 in process, 2 approved, 3 backordered, 4 rejected, 5 shipped, 6 cancelled."
+            data_tests:
+              - not_null
+
+          - name: onlineorderflag
+            description: "Whether the order was placed online (true) or by a salesperson (false)."
+
+          - name: customerid
+            description: "Customer who placed the order."
+            data_tests:
+              - not_null
+              - relationships:
+                  to: source('sales', 'customer')
+                  field: customerid
+
+          - name: shiptoaddressid
+            description: "Shipping address of the order (basis for city, state and country)."
+            data_tests:
+              - not_null
+              - relationships:
+                  to: source('person', 'address')
+                  field: addressid
+
+          - name: creditcardid
+            description: "Credit card used in the order. Can be null."
+            data_tests:
+              - relationships:
+                  to: source('sales', 'creditcard')
+                  field: creditcardid
+
+          - name: subtotal
+            description: "Sum of the order lines, already net of discounts."
+
+          - name: taxamt
+            description: "Tax amount of the order (exists only in the header)."
+
+          - name: freight
+            description: "Freight amount of the order (exists only in the header)."
+
+          - name: totaldue
+            description: "Total due (subtotal + tax + freight)."
+
+      - name: salesorderdetail
+        description: "Sales order lines. One row per product in each order."
+        columns:
+          - name: salesorderdetailid
+            description: "Primary key of the order line. Must be unique to catch load duplicates."
+            data_tests:
+              - unique
+              - not_null
+
+          - name: salesorderid
+            description: "Order the line belongs to."
+            data_tests:
+              - not_null
+              - relationships:
+                  to: source('sales', 'salesorderheader')
+                  field: salesorderid
+
+          - name: productid
+            description: "Product sold in the line."
+            data_tests:
+              - not_null
+              - relationships:
+                  to: source('production', 'product')
+                  field: productid
+
+          - name: orderqty
+            description: "Quantity sold."
+            data_tests:
+              - not_null
+
+          - name: unitprice
+            description: "Unit price before discounts."
+            data_tests:
+              - not_null
+
+          - name: unitpricediscount
+            description: "Discount applied to the unit price, as a fraction (0.10 = 10%)."
+            data_tests:
+              - not_null
+
+      - name: salesorderheadersalesreason
+        description: "Many-to-many relationship between orders and sales reasons."
+        data_tests:
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns:
+                - salesorderid
+                - salesreasonid
+        columns:
+          - name: salesorderid
+            description: "Order."
+            data_tests:
+              - not_null
+              - relationships:
+                  to: source('sales', 'salesorderheader')
+                  field: salesorderid
+
+          - name: salesreasonid
+            description: "Sales reason."
+            data_tests:
+              - not_null
+              - relationships:
+                  to: source('sales', 'salesreason')
+                  field: salesreasonid
+
+      - name: salesreason
+        description: "Sales reasons lookup, for example Price and Promotion."
+        columns:
+          - name: salesreasonid
+            description: "Primary key of the sales reason."
+            data_tests:
+              - unique
+              - not_null
+
+          - name: name
+            description: "Name of the sales reason."
+            data_tests:
+              - not_null
+
+      - name: customer
+        description: "Customers. A customer is either a person (personid) or a store (storeid)."
+        columns:
+          - name: customerid
+            description: "Primary key of the customer."
+            data_tests:
+              - unique
+              - not_null
+
+          - name: personid
+            description: "Person linked to the customer. Null when the customer is a store."
+            data_tests:
+              - relationships:
+                  to: source('person', 'person')
+                  field: businessentityid
+
+          - name: storeid
+            description: "Store linked to the customer. Null when the customer is a person."
+            data_tests:
+              - relationships:
+                  to: source('sales', 'store')
+                  field: businessentityid
+
+      - name: creditcard
+        description: "Credit cards used in orders."
+        columns:
+          - name: creditcardid
+            description: "Primary key of the credit card."
+            data_tests:
+              - unique
+              - not_null
+
+          - name: cardtype
+            description: "Card brand or type."
+            data_tests:
+              - not_null
+
+      - name: store
+        description: "Reseller stores that are customers."
+        columns:
+          - name: businessentityid
+            description: "Primary key of the store."
+            data_tests:
+              - unique
+              - not_null

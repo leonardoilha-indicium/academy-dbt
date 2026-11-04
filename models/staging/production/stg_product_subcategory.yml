@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: stg_product_subcategory
+    description: "Product subcategories."
+    columns:
+      - name: product_subcategory_id
+        description: "Primary key of the subcategory."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: product_category_id
+        description: "Category the subcategory belongs to."
+        data_tests:
+          - not_null
+
+      - name: product_subcategory_name
+        description: "Name of the subcategory."

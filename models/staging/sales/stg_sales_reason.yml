@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: stg_sales_reason
+    description: "Sales reasons lookup."
+    columns:
+      - name: sales_reason_id
+        description: "Primary key of the sales reason."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: sales_reason_name
+        description: "Name of the sales reason."
+        data_tests:
+          - not_null
+
+      - name: sales_reason_type
+        description: "Type of the reason, for example Marketing, Promotion or Other."

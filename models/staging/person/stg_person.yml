@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: stg_person
+    description: "People, used to get the name of individual customers."
+    columns:
+      - name: person_id
+        description: "Primary key of the person."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: first_name
+        description: "First name."
+
+      - name: middle_name
+        description: "Middle name."
+
+      - name: last_name
+        description: "Last name."

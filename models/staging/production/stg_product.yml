@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: stg_product
+    description: "Product catalog."
+    columns:
+      - name: product_id
+        description: "Primary key of the product."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: product_subcategory_id
+        description: "Subcategory of the product. Can be null."
+
+      - name: product_name
+        description: "Product name."
+        data_tests:
+          - not_null
+
+      - name: product_number
+        description: "Product code."
+
+      - name: color
+        description: "Product color."
+
+      - name: standard_cost
+        description: "Standard cost of the product."
+
+      - name: list_price
+        description: "List price of the product."
