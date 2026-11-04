@@ -6,10 +6,10 @@ with
 
     , renamed as (
         select
-            cast(businessentityid as int) as person_id
-            , trim(firstname) as first_name
-            , trim(middlename) as middle_name
-            , trim(lastname) as last_name
+            cast(businessentityid as int) as nk_person
+            , trim(firstname) as nm_first
+            , trim(middlename) as nm_middle
+            , trim(lastname) as nm_last
         from source
     )
 

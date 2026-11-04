@@ -4,37 +4,37 @@ models:
   - name: stg_sales_order_header
     description: "Sales order headers with renamed and typed columns. One row per order."
     columns:
-      - name: sales_order_id
+      - name: nk_sales_order
         description: "Primary key of the order."
         data_tests:
           - unique
           - not_null
 
-      - name: customer_id
+      - name: nk_customer
         description: "Customer who placed the order."
         data_tests:
           - not_null
 
-      - name: territory_id
+      - name: nk_territory
         description: "Sales territory of the order."
 
-      - name: bill_to_address_id
+      - name: nk_bill_to_address
         description: "Billing address."
 
-      - name: ship_to_address_id
+      - name: nk_ship_to_address
         description: "Shipping address."
         data_tests:
           - not_null
 
-      - name: credit_card_id
+      - name: nk_credit_card
         description: "Credit card used. Null when not informed."
 
-      - name: order_date
+      - name: dt_order
         description: "Date the order was placed."
         data_tests:
           - not_null
 
-      - name: order_status
+      - name: nk_order_status
         description: "Order status code (1 to 6)."
         data_tests:
           - not_null
@@ -42,14 +42,14 @@ models:
       - name: is_online_order
         description: "True when the order was placed online."
 
-      - name: subtotal_amount
+      - name: vl_subtotal
         description: "Order subtotal, net of discounts."
 
-      - name: tax_amount
+      - name: vl_tax
         description: "Order tax amount."
 
-      - name: freight_amount
+      - name: vl_freight
         description: "Order freight amount."
 
-      - name: total_due_amount
+      - name: vl_total_due
         description: "Total due (subtotal + tax + freight)."

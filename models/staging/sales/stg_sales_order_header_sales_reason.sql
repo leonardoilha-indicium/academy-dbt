@@ -6,8 +6,8 @@ with
 
     , renamed as (
         select
-            cast(salesorderid as int) as sales_order_id
-            , cast(salesreasonid as int) as sales_reason_id
+            cast(salesorderid as int) as nk_sales_order
+            , cast(salesreasonid as int) as nk_sales_reason
         from source
     )
 

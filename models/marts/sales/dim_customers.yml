@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "Customer dimension. A customer is a store when a store is linked, otherwise a person. One row per customer."
+    columns:
+      - name: sk_customer
+        description: "Surrogate key of the customer."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nk_customer
+        description: "Natural key of the customer in the source."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: ds_customer_type
+        description: "Type of the customer: Store or Person."
+        data_tests:
+          - not_null
+          - accepted_values:
+              values:
+                - Store
+                - Person
+
+      - name: nm_customer
+        description: "Store name for store customers, full person name otherwise."
+        data_tests:
+          - not_null
+
+      - name: nm_contact
+        description: "Full name of the person linked to a store customer. Null for person customers."
+
+      - name: nk_territory
+        description: "Sales territory identifier of the customer."

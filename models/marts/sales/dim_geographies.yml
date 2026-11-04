@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: dim_geographies
+    description: "Geography dimension at city, state and country level. One row per city within a state or province."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - nk_state_province
+            - nm_city
+    columns:
+      - name: sk_geography
+        description: "Surrogate key of the geography (state or province plus city)."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nm_city
+        description: "City name."
+        data_tests:
+          - not_null
+
+      - name: nk_state_province
+        description: "Natural key of the state or province in the source."
+        data_tests:
+          - not_null
+
+      - name: cd_state_province
+        description: "State or province abbreviation."
+
+      - name: nm_state_province
+        description: "State or province name."
+        data_tests:
+          - not_null
+
+      - name: cd_country_region
+        description: "Country code."
+        data_tests:
+          - not_null
+
+      - name: nm_country_region
+        description: "Country name."
+        data_tests:
+          - not_null

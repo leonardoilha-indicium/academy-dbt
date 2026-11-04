@@ -4,17 +4,17 @@ models:
   - name: stg_person
     description: "People, used to get the name of individual customers."
     columns:
-      - name: person_id
+      - name: nk_person
         description: "Primary key of the person."
         data_tests:
           - unique
           - not_null
 
-      - name: first_name
+      - name: nm_first
         description: "First name."
 
-      - name: middle_name
+      - name: nm_middle
         description: "Middle name."
 
-      - name: last_name
+      - name: nm_last
         description: "Last name."

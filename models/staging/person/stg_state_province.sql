@@ -6,10 +6,10 @@ with
 
     , renamed as (
         select
-            cast(stateprovinceid as int) as state_province_id
-            , trim(stateprovincecode) as state_province_code
-            , trim(countryregioncode) as country_region_code
-            , trim(name) as state_province_name
+            cast(stateprovinceid as int) as nk_state_province
+            , trim(stateprovincecode) as cd_state_province
+            , trim(countryregioncode) as cd_country_region
+            , trim(name) as nm_state_province
         from source
     )
 

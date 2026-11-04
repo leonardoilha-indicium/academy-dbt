@@ -6,9 +6,9 @@ with
 
     , renamed as (
         select
-            cast(salesreasonid as int) as sales_reason_id
-            , trim(name) as sales_reason_name
-            , trim(reasontype) as sales_reason_type
+            cast(salesreasonid as int) as nk_sales_reason
+            , trim(name) as nm_sales_reason
+            , trim(reasontype) as ds_sales_reason_type
         from source
     )
 

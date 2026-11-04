@@ -6,8 +6,8 @@ with
 
     , renamed as (
         select
-            cast(productcategoryid as int) as product_category_id
-            , trim(name) as product_category_name
+            cast(productcategoryid as int) as nk_product_category
+            , trim(name) as nm_product_category
         from source
     )
 

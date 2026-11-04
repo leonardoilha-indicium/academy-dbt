@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: bridge_order_sales_reasons
+    description: "Bridge between orders and sales reasons (many-to-many). One row per order and reason. Orders without any reason have a single row pointing to the 'No reason' member."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - nk_sales_order
+            - fk_sales_reason
+    columns:
+      - name: sk_order_sales_reason
+        description: "Surrogate key of the order and sales reason pair."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nk_sales_order
+        description: "Order identifier. Links to the sales order in the fact table."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_sales_order_header')
+              field: nk_sales_order
+
+      - name: fk_sales_reason
+        description: "Surrogate key of the sales reason."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_sales_reasons')
+              field: sk_sales_reason

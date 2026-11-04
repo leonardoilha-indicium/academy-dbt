@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: dim_credit_cards
+    description: "Credit card dimension. Includes an Unknown member (id -1) for orders placed without a card."
+    columns:
+      - name: sk_credit_card
+        description: "Surrogate key of the credit card."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nk_credit_card
+        description: "Natural key of the credit card in the source. -1 for the Unknown member."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: ds_card_type
+        description: "Card brand or type. 'Unknown' for orders without a card."
+        data_tests:
+          - not_null

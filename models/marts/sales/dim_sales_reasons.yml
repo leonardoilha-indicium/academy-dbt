@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: dim_sales_reasons
+    description: "Sales reason dimension. Includes a 'No reason' member (id -1) for orders without any reason."
+    columns:
+      - name: sk_sales_reason
+        description: "Surrogate key of the sales reason."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nk_sales_reason
+        description: "Natural key of the sales reason in the source. -1 for the 'No reason' member."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nm_sales_reason
+        description: "Name of the sales reason, for example Price or On Promotion."
+        data_tests:
+          - not_null
+
+      - name: ds_sales_reason_type
+        description: "Type of the sales reason: Marketing, Promotion, Other or 'No reason'."
+        data_tests:
+          - not_null

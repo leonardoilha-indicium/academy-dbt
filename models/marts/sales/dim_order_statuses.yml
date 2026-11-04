@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: dim_order_statuses
+    description: "Order status dimension. The codes are defined in the model because the source has no status lookup table."
+    columns:
+      - name: sk_order_status
+        description: "Surrogate key of the order status."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nk_order_status
+        description: "Status code used in the order header (1 to 6)."
+        data_tests:
+          - unique
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 6
+
+      - name: nm_order_status
+        description: "Status name in English."
+        data_tests:
+          - not_null

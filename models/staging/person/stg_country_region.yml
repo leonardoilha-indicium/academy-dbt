@@ -4,11 +4,11 @@ models:
   - name: stg_country_region
     description: "Countries and regions."
     columns:
-      - name: country_region_code
+      - name: cd_country_region
         description: "Primary key (code) of the country."
         data_tests:
           - unique
           - not_null
 
-      - name: country_region_name
+      - name: nm_country_region
         description: "Name of the country."

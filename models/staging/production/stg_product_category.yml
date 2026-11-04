@@ -4,11 +4,11 @@ models:
   - name: stg_product_category
     description: "Product categories."
     columns:
-      - name: product_category_id
+      - name: nk_product_category
         description: "Primary key of the category."
         data_tests:
           - unique
           - not_null
 
-      - name: product_category_name
+      - name: nm_product_category
         description: "Name of the category."

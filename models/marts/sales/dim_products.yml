@@ -1,0 +1,46 @@
+version: 2
+
+models:
+  - name: dim_products
+    description: "Product dimension with subcategory and category. One row per product."
+    columns:
+      - name: sk_product
+        description: "Surrogate key of the product."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nk_product
+        description: "Natural key of the product in the source."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nm_product
+        description: "Product name."
+        data_tests:
+          - not_null
+
+      - name: cd_product
+        description: "Product code."
+
+      - name: ds_color
+        description: "Product color. 'Not defined' when the product has no color."
+        data_tests:
+          - not_null
+
+      - name: vl_list_price
+        description: "List price of the product."
+
+      - name: vl_standard_cost
+        description: "Standard cost of the product."
+
+      - name: nm_product_subcategory
+        description: "Product subcategory. 'Not defined' when the product has none."
+        data_tests:
+          - not_null
+
+      - name: nm_product_category
+        description: "Product category. 'Not defined' when the product has none."
+        data_tests:
+          - not_null

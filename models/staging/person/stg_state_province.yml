@@ -4,19 +4,19 @@ models:
   - name: stg_state_province
     description: "States and provinces."
     columns:
-      - name: state_province_id
+      - name: nk_state_province
         description: "Primary key of the state or province."
         data_tests:
           - unique
           - not_null
 
-      - name: state_province_code
+      - name: cd_state_province
         description: "State or province abbreviation, trimmed."
 
-      - name: country_region_code
+      - name: cd_country_region
         description: "Code of the country."
         data_tests:
           - not_null
 
-      - name: state_province_name
+      - name: nm_state_province
         description: "Name of the state or province."

@@ -4,16 +4,16 @@ models:
   - name: stg_product_subcategory
     description: "Product subcategories."
     columns:
-      - name: product_subcategory_id
+      - name: nk_product_subcategory
         description: "Primary key of the subcategory."
         data_tests:
           - unique
           - not_null
 
-      - name: product_category_id
+      - name: nk_product_category
         description: "Category the subcategory belongs to."
         data_tests:
           - not_null
 
-      - name: product_subcategory_name
+      - name: nm_product_subcategory
         description: "Name of the subcategory."

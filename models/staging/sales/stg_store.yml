@@ -4,11 +4,11 @@ models:
   - name: stg_store
     description: "Reseller stores that are customers."
     columns:
-      - name: store_id
+      - name: nk_store
         description: "Primary key of the store."
         data_tests:
           - unique
           - not_null
 
-      - name: store_name
+      - name: nm_store
         description: "Name of the store."

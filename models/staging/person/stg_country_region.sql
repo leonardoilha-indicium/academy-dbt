@@ -6,8 +6,8 @@ with
 
     , renamed as (
         select
-            trim(countryregioncode) as country_region_code
-            , trim(name) as country_region_name
+            trim(countryregioncode) as cd_country_region
+            , trim(name) as nm_country_region
         from source
     )
 

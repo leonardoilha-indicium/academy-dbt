@@ -6,9 +6,9 @@ with
 
     , renamed as (
         select
-            cast(addressid as int) as address_id
-            , cast(stateprovinceid as int) as state_province_id
-            , trim(city) as city_name
+            cast(addressid as int) as nk_address
+            , cast(stateprovinceid as int) as nk_state_province
+            , trim(city) as nm_city
         from source
     )
 

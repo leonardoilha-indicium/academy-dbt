@@ -1,0 +1,70 @@
+version: 2
+
+models:
+  - name: dim_dates
+    description: "Calendar dimension, from 2011-01-01 to 2014-12-31. One row per day. Weeks start on Monday."
+    columns:
+      - name: sk_date
+        description: "Surrogate key of the date."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: dt_calendar
+        description: "Calendar date."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nr_year
+        description: "Calendar year."
+        data_tests:
+          - not_null
+
+      - name: nr_quarter
+        description: "Calendar quarter (1 to 4)."
+        data_tests:
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 4
+
+      - name: nr_month
+        description: "Calendar month (1 to 12)."
+        data_tests:
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 12
+
+      - name: nm_month
+        description: "Month name in English."
+        data_tests:
+          - not_null
+
+      - name: ds_year_month
+        description: "Year and month in the yyyy-MM format."
+        data_tests:
+          - not_null
+
+      - name: nr_day_of_month
+        description: "Day of the month (1 to 31)."
+        data_tests:
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 31
+
+      - name: nr_day_of_week
+        description: "Day of the week, from 1 (Monday) to 7 (Sunday)."
+        data_tests:
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 7
+
+      - name: nm_day_of_week
+        description: "Day of the week name in English."
+        data_tests:
+          - not_null
+
+      - name: is_weekend
+        description: "True for Saturday and Sunday."
+        data_tests:
+          - not_null

@@ -4,13 +4,13 @@ models:
   - name: stg_credit_card
     description: "Credit cards used in orders."
     columns:
-      - name: credit_card_id
+      - name: nk_credit_card
         description: "Primary key of the credit card."
         data_tests:
           - unique
           - not_null
 
-      - name: card_type
+      - name: ds_card_type
         description: "Card brand or type."
         data_tests:
           - not_null
