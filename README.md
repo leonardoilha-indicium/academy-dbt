@@ -1,25 +1,59 @@
-# Indicium Academy
+# Adventure Works Analytics Engineering
 
-Repositório para ser utilizado no desafio para a obtenção da certificação de Analytics Engineer by Indicium. Faça o fork deste repositório e o utilize durante o desafio para fazer a insgestão das tabelas do SAP do Adventure Works.
+Projeto da certificação de Analytics Engineer (Indicium). O objetivo é construir um data warehouse dimensional para a área comercial da Adventure Works, com dados confiáveis e auditáveis, e entregar um dashboard que responda às perguntas do negócio.
 
-## Instruções
+## Stack
 
-Todas as tabelas do banco fonte do SAP da Adventure Works serão carregadas como seeds pelo dbt. Os arquivos .csv com os dados já estão na pasta de seeds.
+- Data warehouse: Databricks Free Edition (Unity Catalog, SQL Warehouse serverless)
+- Transformação: dbt Cloud
+- BI: Power BI Desktop
+- Versionamento: GitHub
 
-Para fazer o carregamento de todas as tabelas usem o comando:
-- `dbt seed`
+## Arquitetura
 
-Para carregar uma tabela especifíca utilizem o comando
-- `dbt seed -s nome_do_csv`
+Os 64 CSVs do SAP Adventure Works ficam em `seeds/sap_adventure_works/` e são carregados com `dbt seed` no schema `adventure_works` do catálogo `adventure_works_dw`. Esse é o único schema de origem do desafio.
 
-### Problemas comuns
+| Camada | Schema | Materialização | Conteúdo |
+|---|---|---|---|
+| Raw (seeds) | `adventure_works` | tabela | Tabelas originais do SAP |
+| Staging | `staging` | view | Um modelo `stg_*` por tabela de origem, só renomeação, cast e limpeza |
+| Intermediate | `staging` | ephemeral | Regras intermediárias (ex.: motivos de venda por pedido) |
+| Marts | `marts` | tabela | Dimensões `dim_*` e fato `fct_sales` consumidas pelo Power BI |
 
-Em caso a linha de comando do dbt fique com o status de estar sempre carregando, ou, o job do comando `dbt seed` fique rodando indefinitivamente mesmo após as 64 tabelas forem carregadas você precisará reiniciar o terminal. Para isso, clique nos três pontos no canto inferior direito ou no lado direito da linha de comando e escolha a opção `Restart IDE`.
+O schema customizado é usado exatamente como escrito, graças à macro `macros/generate_schema_name.sql`.
 
+## Estrutura
 
-## Recursos:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [dbt community](http://community.getbdt.com/) to learn from other analytics engineers
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+```
+models/
+  staging/
+  intermediate/
+  marts/
+tests/        testes singulares (ex.: valor de vendas brutas de 2011)
+macros/       generate_schema_name
+seeds/        CSVs do Adventure Works
+```
+
+## Como rodar
+
+```
+dbt deps
+dbt seed
+dbt run
+dbt test --select source:*
+dbt test
+```
+
+Para carregar uma tabela específica: `dbt seed -s nome_do_csv`.
+
+Se o `dbt seed` ficar rodando indefinidamente depois de carregar as 64 tabelas, reinicie a IDE do dbt Cloud (três pontos no canto da linha de comando, `Restart IDE`) e carregue em lotes.
+
+## Qualidade de dados
+
+- Testes de source e de chave primária (`unique` e `not_null`) nas dimensões e na fato
+- Testes de qualidade nos modelos
+- Teste singular que compara as vendas brutas de 2011 com o valor auditado de US$ 12.646.112,16
+
+## Segurança
+
+Tokens de acesso do Databricks nunca são versionados. A conexão é configurada no dbt Cloud.
