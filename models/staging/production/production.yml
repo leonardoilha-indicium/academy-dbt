@@ -53,3 +53,32 @@ sources:
             data_tests:
               - unique
               - not_null
+
+      - name: productcosthistory
+        description: "Standard cost history of the products. One row per product and cost period."
+        data_tests:
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns:
+                - productid
+                - startdate
+        columns:
+          - name: productid
+            description: "Product the cost belongs to."
+            data_tests:
+              - not_null
+              - relationships:
+                  to: source('production', 'product')
+                  field: productid
+
+          - name: startdate
+            description: "First date the cost applies."
+            data_tests:
+              - not_null
+
+          - name: enddate
+            description: "Last date the cost applies. Null for the current cost."
+
+          - name: standardcost
+            description: "Standard cost of one unit of the product in the period."
+            data_tests:
+              - not_null

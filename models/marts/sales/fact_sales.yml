@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: fact_sales
-    description: "Sales fact at order line grain. One row per sales order line, with additive measures for quantity, gross, discount and net amounts. Gross amount is unit price times quantity, before discounts."
+    description: "Sales fact at order line grain. One row per sales order line, with additive measures for quantity, gross, discount, net, cost and margin amounts. Gross amount is unit price times quantity, before discounts."
     data_tests:
       - dbt_utils.equal_rowcount:
           compare_model: ref('stg_sales_order_detail')
@@ -112,3 +112,15 @@ models:
           - not_null
           - dbt_utils.accepted_range:
               min_value: 0
+
+      - name: vl_cost
+        description: "Cost of the line: unit standard cost valid on the order date times quantity. When the product has no cost row for the order date, the standard cost of the product catalog is used."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+
+      - name: vl_margin
+        description: "Margin of the line: net amount minus cost. It can be negative when the line is sold below cost. The margin percentage is calculated in the query or in the BI."
+        data_tests:
+          - not_null
