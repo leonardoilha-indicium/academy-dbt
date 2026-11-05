@@ -6,7 +6,7 @@ with
 
     , final as (
         select
-            nk_ship_method as sk_ship_method
+            {{ dbt_utils.generate_surrogate_key(['nk_ship_method']) }} as sk_ship_method
             , nk_ship_method
             , nm_ship_method
             , vl_ship_base
