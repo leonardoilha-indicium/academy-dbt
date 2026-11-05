@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: stg_sales_territory
+    description: "Sales territories with renamed and typed columns. One row per territory."
+    columns:
+      - name: nk_territory
+        description: "Natural key of the sales territory."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nm_territory
+        description: "Name of the sales territory."
+        data_tests:
+          - not_null
+
+      - name: cd_country_region
+        description: "Code of the country or region of the territory."
+        data_tests:
+          - not_null
+
+      - name: nm_territory_group
+        description: "Sales group of the territory, for example North America or Europe."
+        data_tests:
+          - not_null

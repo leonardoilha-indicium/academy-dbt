@@ -1,0 +1,144 @@
+version: 2
+
+models:
+  - name: fact_orders
+    description: "Sales fact at order grain. One row per sales order, with the header amounts (subtotal, tax, freight and total due) and the days to ship. Freight and tax exist only here and must not be mixed with the order line amounts of fact_sales."
+    data_tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('stg_sales_order_header')
+      - dbt_utils.expression_is_true:
+          expression: "abs(vl_total_due - (vl_subtotal + vl_tax + vl_freight)) < 0.01"
+      - dbt_utils.expression_is_true:
+          expression: "abs((select sum(vl_subtotal) from {{ ref('fact_orders') }}) - (select sum(vl_net) from {{ ref('fact_sales') }})) < 0.01"
+    columns:
+      - name: sk_sales_order
+        description: "Surrogate key of the order (primary key)."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nk_sales_order
+        description: "Natural key of the order in the source. Links to the order lines in fact_sales."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nk_customer
+        description: "Natural key of the customer. Links to the customer dimension."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: sk_customer
+
+      - name: nk_sales_person
+        description: "Natural key of the salesperson. Links to the salesperson dimension. Is -1 (No salesperson member) for online orders."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_salespersons')
+              field: sk_sales_person
+
+      - name: nk_territory
+        description: "Natural key of the sales territory. Links to the territory dimension."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_territories')
+              field: sk_territory
+
+      - name: nk_ship_method
+        description: "Natural key of the shipping method. Links to the shipping method dimension."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_ship_methods')
+              field: sk_ship_method
+
+      - name: nk_credit_card
+        description: "Natural key of the credit card. Links to the credit card dimension. Is -1 (Unknown member) when the order has no card."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_credit_cards')
+              field: sk_credit_card
+
+      - name: nk_order_status
+        description: "Natural key of the order status. Links to the order status dimension."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_order_statuses')
+              field: sk_order_status
+
+      - name: fk_geography
+        description: "Foreign key to the geography dimension (state or province plus city), based on the ship-to address."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_geographies')
+              field: sk_geography
+
+      - name: dt_order
+        description: "Date the order was placed. Links to the date dimension."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_dates')
+              field: sk_date
+
+      - name: dt_due
+        description: "Date the order is due to the customer. Links to the date dimension."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_dates')
+              field: sk_date
+
+      - name: dt_ship
+        description: "Date the order was shipped. Links to the date dimension."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_dates')
+              field: sk_date
+
+      - name: is_online_order
+        description: "True when the order was placed online, false when placed by a salesperson."
+        data_tests:
+          - not_null
+
+      - name: qt_days_to_ship
+        description: "Days between the order date and the ship date."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+
+      - name: vl_subtotal
+        description: "Order subtotal, net of discounts (sum of the order line net amounts)."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+
+      - name: vl_tax
+        description: "Tax amount of the order."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+
+      - name: vl_freight
+        description: "Freight amount of the order."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+
+      - name: vl_total_due
+        description: "Total due: subtotal plus tax plus freight."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0

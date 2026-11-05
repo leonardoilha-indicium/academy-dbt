@@ -1,0 +1,22 @@
+version: 2
+
+sources:
+  - name: purchasing
+    description: "Raw Adventure Works purchasing data, loaded from seeds into the adventure_works schema."
+    database: adventure_works_dw
+    schema: adventure_works
+
+    tables:
+      - name: shipmethod
+        description: "Shipping methods used to deliver orders."
+        columns:
+          - name: shipmethodid
+            description: "Primary key of the shipping method."
+            data_tests:
+              - unique
+              - not_null
+
+          - name: name
+            description: "Name of the shipping method."
+            data_tests:
+              - not_null

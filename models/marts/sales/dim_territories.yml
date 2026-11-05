@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: dim_territories
+    description: "Sales territory dimension. One row per territory, with its sales group and country."
+    columns:
+      - name: sk_territory
+        description: "Surrogate key of the territory (primary key)."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nk_territory
+        description: "Natural key of the territory in the source."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nm_territory
+        description: "Name of the sales territory."
+        data_tests:
+          - not_null
+
+      - name: nm_territory_group
+        description: "Sales group of the territory, for example North America or Europe."
+        data_tests:
+          - not_null
+
+      - name: cd_country_region
+        description: "Code of the country of the territory."
+        data_tests:
+          - not_null
+
+      - name: nm_country_region
+        description: "Name of the country of the territory."
+        data_tests:
+          - not_null

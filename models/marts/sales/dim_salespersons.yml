@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: dim_salespersons
+    description: "Salesperson dimension. Includes a 'No salesperson' member (id -1) for online orders, which have no salesperson."
+    columns:
+      - name: sk_sales_person
+        description: "Surrogate key of the salesperson (primary key)."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nk_sales_person
+        description: "Natural key of the salesperson in the source. -1 for the 'No salesperson' member."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nm_sales_person
+        description: "Full name of the salesperson."
+        data_tests:
+          - not_null
+
+      - name: nk_territory
+        description: "Sales territory of the salesperson. Null for the 'No salesperson' member and for salespeople without a territory."

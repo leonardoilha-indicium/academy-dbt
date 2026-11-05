@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: dim_ship_methods
+    description: "Shipping method dimension. One row per shipping method."
+    columns:
+      - name: sk_ship_method
+        description: "Surrogate key of the shipping method (primary key)."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nk_ship_method
+        description: "Natural key of the shipping method in the source."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nm_ship_method
+        description: "Name of the shipping method."
+        data_tests:
+          - not_null
+
+      - name: vl_ship_base
+        description: "Minimum shipping charge."
+
+      - name: vl_ship_rate
+        description: "Shipping charge per unit of weight."

@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: stg_sales_person
+    description: "Salespeople with renamed and typed columns. One row per salesperson."
+    columns:
+      - name: nk_sales_person
+        description: "Natural key of the salesperson. It is also the identifier of the person."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nk_territory
+        description: "Sales territory of the salesperson. Can be null."

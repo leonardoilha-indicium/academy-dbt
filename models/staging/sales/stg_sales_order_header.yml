@@ -5,7 +5,7 @@ models:
     description: "Sales order headers with renamed and typed columns. One row per order."
     columns:
       - name: nk_sales_order
-        description: "Primary key of the order."
+        description: "Natural key of the order."
         data_tests:
           - unique
           - not_null
@@ -15,8 +15,13 @@ models:
         data_tests:
           - not_null
 
+      - name: nk_sales_person
+        description: "Salesperson responsible for the order. Null for online orders."
+
       - name: nk_territory
         description: "Sales territory of the order."
+        data_tests:
+          - not_null
 
       - name: nk_bill_to_address
         description: "Billing address."
@@ -26,11 +31,26 @@ models:
         data_tests:
           - not_null
 
+      - name: nk_ship_method
+        description: "Shipping method used in the order."
+        data_tests:
+          - not_null
+
       - name: nk_credit_card
         description: "Credit card used. Null when not informed."
 
       - name: dt_order
         description: "Date the order was placed."
+        data_tests:
+          - not_null
+
+      - name: dt_due
+        description: "Date the order is due to the customer."
+        data_tests:
+          - not_null
+
+      - name: dt_ship
+        description: "Date the order was shipped."
         data_tests:
           - not_null
 

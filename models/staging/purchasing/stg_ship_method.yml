@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: stg_ship_method
+    description: "Shipping methods with renamed and typed columns. One row per shipping method."
+    columns:
+      - name: nk_ship_method
+        description: "Natural key of the shipping method."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nm_ship_method
+        description: "Name of the shipping method."
+        data_tests:
+          - not_null
+
+      - name: vl_ship_base
+        description: "Minimum shipping charge."
+
+      - name: vl_ship_rate
+        description: "Shipping charge per unit of weight."

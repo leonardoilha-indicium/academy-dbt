@@ -21,6 +21,39 @@ sources:
             data_tests:
               - not_null
 
+          - name: duedate
+            description: "Date the order is due to the customer."
+            data_tests:
+              - not_null
+
+          - name: shipdate
+            description: "Date the order was shipped."
+            data_tests:
+              - not_null
+
+          - name: territoryid
+            description: "Sales territory of the order."
+            data_tests:
+              - not_null
+              - relationships:
+                  to: source('sales', 'salesterritory')
+                  field: territoryid
+
+          - name: salespersonid
+            description: "Salesperson responsible for the order. Null for online orders."
+            data_tests:
+              - relationships:
+                  to: source('sales', 'salesperson')
+                  field: businessentityid
+
+          - name: shipmethodid
+            description: "Shipping method used in the order."
+            data_tests:
+              - not_null
+              - relationships:
+                  to: source('purchasing', 'shipmethod')
+                  field: shipmethodid
+
           - name: status
             description: "Order status: 1 in process, 2 approved, 3 backordered, 4 rejected, 5 shipped, 6 cancelled."
             data_tests:
@@ -187,3 +220,50 @@ sources:
             data_tests:
               - unique
               - not_null
+
+      - name: salesterritory
+        description: "Sales territories. Each territory belongs to a country or region."
+        columns:
+          - name: territoryid
+            description: "Primary key of the sales territory."
+            data_tests:
+              - unique
+              - not_null
+
+          - name: name
+            description: "Name of the sales territory."
+            data_tests:
+              - not_null
+
+          - name: countryregioncode
+            description: "Code of the country or region of the territory."
+            data_tests:
+              - not_null
+              - relationships:
+                  to: source('person', 'countryregion')
+                  field: countryregioncode
+
+          - name: group
+            description: "Sales group of the territory, for example North America or Europe."
+            quote: true
+            data_tests:
+              - not_null
+
+      - name: salesperson
+        description: "Salespeople. Each one is also a person and may be assigned to a territory."
+        columns:
+          - name: businessentityid
+            description: "Primary key of the salesperson. It is also the identifier of the person."
+            data_tests:
+              - unique
+              - not_null
+              - relationships:
+                  to: source('person', 'person')
+                  field: businessentityid
+
+          - name: territoryid
+            description: "Sales territory of the salesperson. Can be null."
+            data_tests:
+              - relationships:
+                  to: source('sales', 'salesterritory')
+                  field: territoryid
