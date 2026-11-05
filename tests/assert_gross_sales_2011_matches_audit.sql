@@ -6,7 +6,7 @@
 with
     fact_sales as (
         select
-            dt_order
+            fk_order_date
             , vl_gross
         from {{ ref('fact_sales') }}
     )
@@ -22,7 +22,7 @@ with
         select sum(fact_sales.vl_gross) as vl_gross_2011
         from fact_sales
         inner join dim_dates
-            on fact_sales.dt_order = dim_dates.sk_date
+            on fact_sales.fk_order_date = dim_dates.sk_date
         where dim_dates.nr_year = 2011
     )
 
