@@ -11,7 +11,7 @@ with
 
     , final as (
         select
-            sales_territory.nk_territory as sk_territory
+            {{ dbt_utils.generate_surrogate_key(['sales_territory.nk_territory']) }} as sk_territory
             , sales_territory.nk_territory
             , sales_territory.nm_territory
             , sales_territory.nm_territory_group

@@ -19,7 +19,6 @@ with
             on sales_person.nk_sales_person = person.nk_person
     )
 
-    /* Online orders have no salesperson and point to this member */
     , unknown_member as (
         select
             -1 as nk_sales_person
@@ -45,7 +44,7 @@ with
 
     , final as (
         select
-            nk_sales_person as sk_sales_person
+            {{ dbt_utils.generate_surrogate_key(['nk_sales_person']) }} as sk_sales_person
             , nk_sales_person
             , nm_sales_person
             , nk_territory

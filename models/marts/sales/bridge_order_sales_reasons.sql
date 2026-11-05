@@ -9,7 +9,13 @@ with
         from {{ ref('stg_sales_order_header_sales_reason') }}
     )
 
-    /* Orders without any reason get the "No reason" member (-1), so every order appears */
+    , dim_sales_reasons as (
+        select
+            sk_sales_reason
+            , nk_sales_reason
+        from {{ ref('dim_sales_reasons') }}
+    )
+
     , order_reasons as (
         select
             order_header.nk_sales_order
@@ -21,10 +27,12 @@ with
 
     , final as (
         select
-            {{ dbt_utils.generate_surrogate_key(['nk_sales_order', 'nk_sales_reason']) }} as sk_order_sales_reason
-            , nk_sales_order
-            , nk_sales_reason
+            {{ dbt_utils.generate_surrogate_key(['order_reasons.nk_sales_order', 'order_reasons.nk_sales_reason']) }} as sk_order_sales_reason
+            , order_reasons.nk_sales_order
+            , dim_sales_reasons.sk_sales_reason as fk_sales_reason
         from order_reasons
+        inner join dim_sales_reasons
+            on order_reasons.nk_sales_reason = dim_sales_reasons.nk_sales_reason
     )
 
 select *

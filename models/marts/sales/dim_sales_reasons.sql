@@ -4,7 +4,6 @@ with
         from {{ ref('stg_sales_reason') }}
     )
 
-    /* Orders without any sales reason point to this member */
     , unknown_member as (
         select
             -1 as nk_sales_reason
@@ -30,7 +29,7 @@ with
 
     , final as (
         select
-            nk_sales_reason as sk_sales_reason
+            {{ dbt_utils.generate_surrogate_key(['nk_sales_reason']) }} as sk_sales_reason
             , nk_sales_reason
             , nm_sales_reason
             , ds_sales_reason_type

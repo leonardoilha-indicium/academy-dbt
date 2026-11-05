@@ -23,48 +23,48 @@ models:
           - unique
           - not_null
 
-      - name: nk_customer
-        description: "Natural key of the customer. Links to the customer dimension."
+      - name: fk_customer
+        description: "Foreign key to the customer dimension."
         data_tests:
           - not_null
           - relationships:
               to: ref('dim_customers')
               field: sk_customer
 
-      - name: nk_sales_person
-        description: "Natural key of the salesperson. Links to the salesperson dimension. Is -1 (No salesperson member) for online orders."
+      - name: fk_sales_person
+        description: "Foreign key to the salesperson dimension. Points to the 'No salesperson' member for online orders."
         data_tests:
           - not_null
           - relationships:
               to: ref('dim_salespersons')
               field: sk_sales_person
 
-      - name: nk_territory
-        description: "Natural key of the sales territory. Links to the territory dimension."
+      - name: fk_territory
+        description: "Foreign key to the sales territory dimension."
         data_tests:
           - not_null
           - relationships:
               to: ref('dim_territories')
               field: sk_territory
 
-      - name: nk_ship_method
-        description: "Natural key of the shipping method. Links to the shipping method dimension."
+      - name: fk_ship_method
+        description: "Foreign key to the shipping method dimension."
         data_tests:
           - not_null
           - relationships:
               to: ref('dim_ship_methods')
               field: sk_ship_method
 
-      - name: nk_credit_card
-        description: "Natural key of the credit card. Links to the credit card dimension. Is -1 (Unknown member) when the order has no card."
+      - name: fk_credit_card
+        description: "Foreign key to the credit card dimension. Points to the Unknown member when the order has no card."
         data_tests:
           - not_null
           - relationships:
               to: ref('dim_credit_cards')
               field: sk_credit_card
 
-      - name: nk_order_status
-        description: "Natural key of the order status. Links to the order status dimension."
+      - name: fk_order_status
+        description: "Foreign key to the order status dimension."
         data_tests:
           - not_null
           - relationships:
@@ -79,29 +79,44 @@ models:
               to: ref('dim_geographies')
               field: sk_geography
 
-      - name: dt_order
-        description: "Date the order was placed. Links to the date dimension."
+      - name: fk_order_date
+        description: "Foreign key to the date dimension, based on the order date."
         data_tests:
           - not_null
           - relationships:
               to: ref('dim_dates')
               field: sk_date
+
+      - name: fk_due_date
+        description: "Foreign key to the date dimension, based on the due date."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_dates')
+              field: sk_date
+
+      - name: fk_ship_date
+        description: "Foreign key to the date dimension, based on the ship date."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_dates')
+              field: sk_date
+
+      - name: dt_order
+        description: "Date the order was placed."
+        data_tests:
+          - not_null
 
       - name: dt_due
-        description: "Date the order is due to the customer. Links to the date dimension."
+        description: "Date the order is due to the customer."
         data_tests:
           - not_null
-          - relationships:
-              to: ref('dim_dates')
-              field: sk_date
 
       - name: dt_ship
-        description: "Date the order was shipped. Links to the date dimension."
+        description: "Date the order was shipped."
         data_tests:
           - not_null
-          - relationships:
-              to: ref('dim_dates')
-              field: sk_date
 
       - name: is_online_order
         description: "True when the order was placed online, false when placed by a salesperson."

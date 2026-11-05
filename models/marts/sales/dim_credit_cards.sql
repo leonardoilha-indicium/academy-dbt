@@ -4,7 +4,6 @@ with
         from {{ ref('stg_credit_card') }}
     )
 
-    /* Orders placed without a credit card point to this member */
     , unknown_member as (
         select
             -1 as nk_credit_card
@@ -27,7 +26,7 @@ with
 
     , final as (
         select
-            nk_credit_card as sk_credit_card
+            {{ dbt_utils.generate_surrogate_key(['nk_credit_card']) }} as sk_credit_card
             , nk_credit_card
             , ds_card_type
         from unioned

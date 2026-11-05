@@ -1,5 +1,4 @@
 with
-    /* The source has no status lookup table, so the codes are defined here */
     statuses as (
         select
             nk_order_status
@@ -16,7 +15,7 @@ with
 
     , final as (
         select
-            nk_order_status as sk_order_status
+            {{ dbt_utils.generate_surrogate_key(['nk_order_status']) }} as sk_order_status
             , nk_order_status
             , nm_order_status
         from statuses
