@@ -16,7 +16,7 @@ with
 
     , final as (
         select
-            dt_calendar as sk_date
+            {{ dbt_utils.generate_surrogate_key(['dt_calendar']) }} as sk_date
             , dt_calendar
             , year(dt_calendar) as nr_year
             , quarter(dt_calendar) as nr_quarter
