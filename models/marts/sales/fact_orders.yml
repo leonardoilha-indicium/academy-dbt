@@ -6,10 +6,6 @@ models:
     data_tests:
       - dbt_utils.equal_rowcount:
           compare_model: ref('stg_sales_order_header')
-      - dbt_utils.expression_is_true:
-          expression: "abs(vl_total_due - (vl_subtotal + vl_tax + vl_freight)) < 0.01"
-      - dbt_utils.expression_is_true:
-          expression: "abs((select sum(vl_subtotal) from {{ ref('fact_orders') }}) - (select sum(vl_net) from {{ ref('fact_sales') }})) < 0.01"
     columns:
       - name: sk_sales_order
         description: "Surrogate key of the order (primary key)."

@@ -97,5 +97,5 @@ A single-column key does not go through `generate_surrogate_key`: the `sk_` of t
 
 - Source tests: `unique` and `not_null` on keys (including `salesorderdetailid`) and `relationships` between tables.
 - Staging and marts tests: `unique` and `not_null` on keys, `relationships` between the fact and the dimensions, `accepted_values` on the customer type.
-- Range and consistency tests on the fact: `accepted_range` on quantity and amounts, `vl_net = vl_gross - vl_discount`, row count equal to the detail and fact total equal to the detail total.
+- Range and consistency tests on the fact: `accepted_range` on quantity and amounts, and row count equal to the detail (`equal_rowcount`).
 - Singular audit test: 2011 gross sales equal to 12,646,112.16.

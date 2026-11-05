@@ -71,7 +71,7 @@ The queries in `analyses/` can be run with `dbt show --select analysis_name`.
 
 - Source tests: `unique` and `not_null` on keys, including `salesorderdetailid` to detect load duplicates, and `relationships` between tables
 - Primary key tests (`unique` and `not_null`) and relationship tests between the fact and the dimensions
-- Quality tests: value ranges, `vl_net = vl_gross - vl_discount`, same row count and same total as the detail, to make sure no join duplicated data
+- Quality tests: value ranges and same row count as the detail (`equal_rowcount`), to make sure no join duplicated data
 - Singular test that compares 2011 gross sales with the audited value of US$ 12,646,112.16
 
 ## Security

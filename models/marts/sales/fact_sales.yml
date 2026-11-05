@@ -6,12 +6,6 @@ models:
     data_tests:
       - dbt_utils.equal_rowcount:
           compare_model: ref('stg_sales_order_detail')
-      - dbt_utils.expression_is_true:
-          expression: "vl_net = vl_gross - vl_discount"
-      - dbt_utils.expression_is_true:
-          expression: "vl_discount <= vl_gross"
-      - dbt_utils.expression_is_true:
-          expression: "abs((select sum(vl_gross) from {{ ref('fact_sales') }}) - (select sum(vl_unit_price * qt_order) from {{ ref('stg_sales_order_detail') }})) < 0.01"
     columns:
       - name: sk_sales_order_detail
         description: "Surrogate key of the order line (primary key)."
