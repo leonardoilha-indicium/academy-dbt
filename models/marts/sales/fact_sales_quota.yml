@@ -1,0 +1,74 @@
+version: 2
+
+models:
+  - name: fact_sales_quota
+    description: "Sales quota fact at salesperson and quota period grain. One row per salesperson and quota, with the quota amount and the net sales and orders achieved in the period. A quota applies from its start date until the day before the next quota of the same salesperson; the last quota applies until the last order date. Quota attainment is the net sales divided by the quota, calculated in the query or in the BI."
+    data_tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('stg_sales_person_quota_history')
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - fk_sales_person
+            - dt_quota_start
+    columns:
+      - name: sk_sales_quota
+        description: "Surrogate key of the salesperson and quota period (primary key)."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: fk_sales_person
+        description: "Foreign key to the salesperson dimension."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_salespersons')
+              field: sk_sales_person
+
+      - name: fk_quota_start_date
+        description: "Foreign key to the date dimension, based on the date the quota starts."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_dates')
+              field: sk_date
+
+      - name: fk_quota_end_date
+        description: "Foreign key to the date dimension, based on the date the quota period ends."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_dates')
+              field: sk_date
+
+      - name: dt_quota_start
+        description: "Date the quota starts to apply."
+        data_tests:
+          - not_null
+
+      - name: dt_quota_end
+        description: "Last date of the quota period: the day before the next quota of the salesperson, or the last order date for the latest quota."
+        data_tests:
+          - not_null
+
+      - name: vl_sales_quota
+        description: "Sales quota amount for the period."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              inclusive: false
+
+      - name: qt_orders
+        description: "Orders of the salesperson placed within the quota period."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+
+      - name: vl_net_sales
+        description: "Net sales (order subtotal) of the salesperson within the quota period. Zero when there are no orders."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0

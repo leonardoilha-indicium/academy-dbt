@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: stg_sales_person_quota_history
+    description: "Sales quota history with renamed and typed columns. One row per salesperson and quota date."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - nk_sales_person
+            - dt_quota
+    columns:
+      - name: nk_sales_person
+        description: "Natural key of the salesperson the quota belongs to."
+        data_tests:
+          - not_null
+
+      - name: dt_quota
+        description: "Date the quota starts to apply."
+        data_tests:
+          - not_null
+
+      - name: vl_sales_quota
+        description: "Sales quota amount for the period."
+        data_tests:
+          - not_null

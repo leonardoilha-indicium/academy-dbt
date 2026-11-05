@@ -267,3 +267,29 @@ sources:
               - relationships:
                   to: source('sales', 'salesterritory')
                   field: territoryid
+
+      - name: salespersonquotahistory
+        description: "Sales quota history. One row per salesperson and quota date (quarterly)."
+        data_tests:
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns:
+                - businessentityid
+                - quotadate
+        columns:
+          - name: businessentityid
+            description: "Salesperson the quota belongs to."
+            data_tests:
+              - not_null
+              - relationships:
+                  to: source('sales', 'salesperson')
+                  field: businessentityid
+
+          - name: quotadate
+            description: "Date the quota starts to apply."
+            data_tests:
+              - not_null
+
+          - name: salesquota
+            description: "Sales quota amount for the period."
+            data_tests:
+              - not_null
