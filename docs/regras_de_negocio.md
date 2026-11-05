@@ -17,6 +17,8 @@ There are three fact tables:
 | Gross sales | Amount sold before discounts | `sum(unitprice * orderqty)` | `fact_sales.vl_gross` | `salesorderdetail` |
 | Discount | Amount granted in the order lines | `unitprice * orderqty * unitpricediscount` | `fact_sales.vl_discount` | `salesorderdetail` |
 | Net revenue | Gross sales minus discounts | `sum(unitprice * orderqty * (1 - unitpricediscount))` | `fact_sales.vl_net` | `salesorderdetail` |
+| Cost | Standard cost of the units sold | `unit standard cost valid on the order date * orderqty` | `fact_sales.vl_cost` | `productcosthistory` (fallback `product`) |
+| Margin | Net revenue minus cost | `net revenue - cost` | `fact_sales.vl_margin` | `fact_sales` |
 | Quantity | Units sold | `sum(orderqty)` | `fact_sales.qt_order` | `salesorderdetail` |
 | Orders | Distinct orders in the period | `count(distinct salesorderid)` | `fact_sales.nk_sales_order` | `salesorderheader` and `salesorderdetail` |
 | Average ticket | Net revenue per order | `net revenue / distinct orders` in the period | calculated in the query or in the BI | fact |
@@ -108,6 +110,10 @@ Every `sk_` is created with `generate_surrogate_key` over the natural key, in th
 ### 11. Sales quota
 
 `salespersonquotahistory` has one quota per salesperson and quota date (quarterly, from 2011-05-31 to 2014-03-01, for 17 salespeople). A quota applies from its date until the day before the next quota of the same salesperson, and the latest quota applies until the last order date of the data. The net sales of the period are the order subtotals of the salesperson orders placed in it. All 3,806 salesperson orders fall in some quota period (US$ 80,487,704.18 in total). Online orders have no salesperson and are not part of the quota. Quota attainment is a ratio and is calculated outside the fact; overall, the net sales are about 84% of the quota (US$ 80.5 million against US$ 95.7 million).
+
+### 12. Cost and margin
+
+The cost of a line is the **standard cost** of the product valid on the order date (`productcosthistory`, between `startdate` and `enddate`), times the quantity. The history covers 121,253 of the 121,317 lines with exactly one cost row. The remaining 64 lines (25 products, orders from 2013-05-30 to 2014-04-30) have no cost row for their date, because the history of those products ends on 2013-05-29, and use the standard cost of the product catalog (`product`), which is filled for every sold product. The margin is the net revenue minus the cost, so it can be negative: about 18% of the lines are sold below the standard cost. Overall, the cost is US$ 97.3 million and the margin US$ 12.6 million, or about 11.4% of the net revenue. The margin percentage is a ratio and is calculated outside the fact. The cost is a standard cost, not the real purchase or production cost.
 
 ## Quality controls
 

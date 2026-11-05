@@ -28,6 +28,8 @@ erDiagram
         decimal vl_gross
         decimal vl_discount
         decimal vl_net
+        decimal vl_cost
+        decimal vl_margin
     }
 
     fact_orders {
@@ -195,7 +197,7 @@ All sources are in the `adventure_works` schema. The `staging` layer has one `st
 
 | Model table | Source tables (`adventure_works` schema) | Note |
 |---|---|---|
-| `fact_sales` | `salesorderdetail`, `salesorderheader`, `address` | Order line grain. Geography comes from the ship-to address |
+| `fact_sales` | `salesorderdetail`, `salesorderheader`, `address`, `product`, `productcosthistory` | Order line grain. Geography comes from the ship-to address. The cost is the standard cost valid on the order date, with the catalog cost as fallback |
 | `fact_orders` | `salesorderheader`, `address` | Order grain. The only place with freight, tax and the days to ship |
 | `fact_sales_quota` | `salespersonquotahistory`, plus the net sales from `fact_orders` | Salesperson and quota period grain |
 | `dim_products` | `product`, `productsubcategory`, `productcategory` | Product with subcategory and category |
@@ -213,10 +215,11 @@ All sources are in the `adventure_works` schema. The `staging` layer has one `st
 ## Reading the model
 
 - **Facts:** `fact_sales` and `fact_orders` are linked by the order (`nk_sales_order`). Freight and tax exist only in `fact_orders` and must not be mixed with the line amounts of `fact_sales`. The number of orders is a distinct count of `nk_sales_order` in `fact_sales`, or a row count in `fact_orders`.
+- **Cost and margin:** `fact_sales` holds `vl_cost` (unit standard cost valid on the order date times quantity) and `vl_margin` (net amount minus cost). The margin can be negative, because some lines are sold below cost. The margin percentage is calculated in the query or in the BI.
 - **Quota:** `fact_sales_quota` holds the quota (`vl_sales_quota`) and the net sales of the salesperson in the same period (`vl_net_sales`, taken from the order subtotal in `fact_orders`). Quota attainment is `vl_net_sales / vl_sales_quota`, calculated in the query or in the BI. All 3,806 salesperson orders fall in some quota period, and online orders have no salesperson.
 - **Dimensions:** each one has a hashed `sk_` primary key. `dim_customers` and `dim_salespersons` keep `nk_territory` as an attribute, without a foreign key to `dim_territories`.
 - **Bridge:** `bridge_order_sales_reasons` links orders to reasons. The sum by reason does not match the fact total, by design.
 
 ## Not modeled yet
 
-Product cost and margin, and special offers (discount programs), are not in the repository and are not in the diagram.
+Special offers (discount programs) are not in the repository and are not in the diagram.

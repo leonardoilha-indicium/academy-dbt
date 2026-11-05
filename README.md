@@ -23,7 +23,7 @@ The custom schema is used exactly as written, thanks to the macro `macros/genera
 
 ## Dimensional model
 
-The model has three facts: `fact_sales` (one row per sales order line), `fact_orders` (one row per order, with subtotal, tax, freight and days to ship) and `fact_sales_quota` (one row per salesperson and quota period, with the quota and the net sales achieved). The dimensions are `dim_products`, `dim_customers`, `dim_dates`, `dim_geographies`, `dim_credit_cards`, `dim_order_statuses`, `dim_sales_reasons`, `dim_salespersons`, `dim_territories` and `dim_ship_methods`. The many-to-many relationship between orders and sales reasons is solved by the bridge table `bridge_order_sales_reasons`.
+The model has three facts: `fact_sales` (one row per sales order line, with gross, discount, net, cost and margin), `fact_orders` (one row per order, with subtotal, tax, freight and days to ship) and `fact_sales_quota` (one row per salesperson and quota period, with the quota and the net sales achieved). The dimensions are `dim_products`, `dim_customers`, `dim_dates`, `dim_geographies`, `dim_credit_cards`, `dim_order_statuses`, `dim_sales_reasons`, `dim_salespersons`, `dim_territories` and `dim_ship_methods`. The many-to-many relationship between orders and sales reasons is solved by the bridge table `bridge_order_sales_reasons`.
 
 Gross sales is `sum(unitprice * orderqty)` before discounts, and in 2011 it matches the audited value of US$ 12,646,112.16. The full design, the source of each table and the diagram are in `docs/modelo_conceitual.md`.
 
