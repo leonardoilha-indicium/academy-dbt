@@ -2,7 +2,7 @@ with
     fact_sales as (
         select
             nk_sales_order
-            , dt_order
+            , fk_order_date
             , is_online_order
             , vl_gross
             , vl_net
@@ -29,7 +29,7 @@ with
             , sum(fact_sales.vl_net) as vl_net
         from fact_sales
         inner join dim_dates
-            on fact_sales.dt_order = dim_dates.sk_date
+            on fact_sales.fk_order_date = dim_dates.sk_date
         group by
             dim_dates.nr_year
             , dim_dates.nr_month

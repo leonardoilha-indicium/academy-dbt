@@ -2,7 +2,7 @@ with
     fact_sales as (
         select
             nk_sales_order
-            , nk_customer
+            , fk_customer
             , is_online_order
             , qt_order
             , vl_gross
@@ -21,14 +21,14 @@ with
         select
             fact_sales.is_online_order
             , dim_customers.ds_customer_type
-            , count(distinct fact_sales.nk_customer) as qt_customers
+            , count(distinct fact_sales.fk_customer) as qt_customers
             , count(distinct fact_sales.nk_sales_order) as qt_orders
             , sum(fact_sales.qt_order) as qt_units
             , sum(fact_sales.vl_gross) as vl_gross
             , sum(fact_sales.vl_net) as vl_net
         from fact_sales
         inner join dim_customers
-            on fact_sales.nk_customer = dim_customers.sk_customer
+            on fact_sales.fk_customer = dim_customers.sk_customer
         group by
             fact_sales.is_online_order
             , dim_customers.ds_customer_type

@@ -2,7 +2,7 @@ with
     fact_sales as (
         select
             nk_sales_order
-            , nk_product
+            , fk_product
             , vl_net
         from {{ ref('fact_sales') }}
     )
@@ -23,7 +23,7 @@ with
             , sum(fact_sales.vl_net) as vl_net
         from fact_sales
         inner join dim_products
-            on fact_sales.nk_product = dim_products.sk_product
+            on fact_sales.fk_product = dim_products.sk_product
         group by
             dim_products.nm_product
             , dim_products.nm_product_category

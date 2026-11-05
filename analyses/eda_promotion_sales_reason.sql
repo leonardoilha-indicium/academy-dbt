@@ -2,7 +2,7 @@ with
     fact_sales as (
         select
             nk_sales_order
-            , nk_product
+            , fk_product
             , qt_order
             , vl_gross
         from {{ ref('fact_sales') }}
@@ -25,7 +25,7 @@ with
         select bridge_order_sales_reasons.nk_sales_order
         from {{ ref('bridge_order_sales_reasons') }} as bridge_order_sales_reasons
         inner join promotion_reason
-            on bridge_order_sales_reasons.nk_sales_reason = promotion_reason.sk_sales_reason
+            on bridge_order_sales_reasons.fk_sales_reason = promotion_reason.sk_sales_reason
     )
 
     , units_by_product as (
@@ -38,7 +38,7 @@ with
         inner join promotion_orders
             on fact_sales.nk_sales_order = promotion_orders.nk_sales_order
         inner join dim_products
-            on fact_sales.nk_product = dim_products.sk_product
+            on fact_sales.fk_product = dim_products.sk_product
         group by dim_products.nm_product
     )
 

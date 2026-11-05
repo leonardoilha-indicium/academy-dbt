@@ -1,17 +1,17 @@
 with
     customer_sales as (
         select
-            nk_customer
+            fk_customer
             , sum(vl_gross) as vl_gross
         from {{ ref('fact_sales') }}
-        group by nk_customer
+        group by fk_customer
     )
 
     , ranked_customers as (
         select
-            nk_customer
+            fk_customer
             , vl_gross
-            , row_number() over (order by vl_gross desc, nk_customer) as nr_rank
+            , row_number() over (order by vl_gross desc, fk_customer) as nr_rank
         from customer_sales
     )
 
