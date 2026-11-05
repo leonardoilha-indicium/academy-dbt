@@ -4,7 +4,11 @@ This document defines each metric of the model in business language, with its fo
 
 ## Grain
 
-The `fact_sales` fact table has one row per **sales order line** (`salesorderdetailid`). The order (`salesorderid`) is kept in the fact as a degenerate dimension (`nk_sales_order`). An order has several lines, so the number of orders is never summed: it is always a distinct count.
+There are three fact tables:
+
+- `fact_sales` has one row per **sales order line** (`salesorderdetailid`). The order (`salesorderid`) is kept in the fact as a degenerate dimension (`nk_sales_order`). An order has several lines, so the number of orders is never summed: it is always a distinct count.
+- `fact_orders` has one row per **sales order**. It holds the header amounts (subtotal, tax, freight and total due) and the days to ship.
+- `fact_sales_quota` has one row per **salesperson and quota period**. It holds the quota and the net sales achieved in the period.
 
 ## Metrics
 
@@ -18,6 +22,14 @@ The `fact_sales` fact table has one row per **sales order line** (`salesorderdet
 | Average ticket | Net revenue per order | `net revenue / distinct orders` in the period | calculated in the query or in the BI | fact |
 | Items per order | Units per order | `quantity / distinct orders` | calculated in the query or in the BI | fact |
 | Discount rate | Share of gross sales that became discount | `discount / gross sales` | calculated in the query or in the BI | fact |
+| Subtotal | Order amount net of discounts | `subtotal` of the order header | `fact_orders.vl_subtotal` | `salesorderheader` |
+| Tax | Tax charged in the order | `taxamt` of the order header | `fact_orders.vl_tax` | `salesorderheader` |
+| Freight | Freight charged in the order | `freight` of the order header | `fact_orders.vl_freight` | `salesorderheader` |
+| Total due | Amount the customer owes | `subtotal + tax + freight` | `fact_orders.vl_total_due` | `salesorderheader` |
+| Days to ship | Days between order and shipment | `ship date - order date` | `fact_orders.qt_days_to_ship` | `salesorderheader` |
+| Sales quota | Sales target of a salesperson for the period | `salesquota` of the quota history | `fact_sales_quota.vl_sales_quota` | `salespersonquotahistory` |
+| Net sales in the quota period | Subtotal of the salesperson orders in the period | `sum(subtotal)` of the orders in the period | `fact_sales_quota.vl_net_sales` | `fact_orders` |
+| Quota attainment | Share of the quota that was sold | `net sales / quota` | calculated in the query or in the BI | `fact_sales_quota` |
 
 The average ticket of a product is the net revenue of the product divided by the distinct orders in which the product appears in that period (month, year, city, state or country).
 
@@ -64,7 +76,7 @@ The source has no status table. Codes 1 to 6 (in process, approved, backordered,
 
 ### 7. Freight and tax
 
-`freight` and `taxamt` exist only in the order header, so they cannot be summed at line level without allocation. They are not part of `fact_sales`. If a KPI needs them, the proposal is to create `fact_orders` at order grain.
+`freight` and `taxamt` exist only in the order header, so they cannot be summed at line level without allocation. They live in `fact_orders`, at order grain, together with the subtotal and the total due, and are never copied to `fact_sales`. In `fact_orders`, the total due is the subtotal plus tax plus freight, and the sum of the subtotals matches the net revenue of `fact_sales` (a difference of 0.004 in total, from source rounding). Order level amounts must not be mixed with product attributes, which exist only at line level.
 
 ### 8. Orders without a credit card
 
@@ -78,9 +90,9 @@ Orders go from 2011-05-31 to 2014-06-30. Therefore 2011 (May to December) and 20
 
 | Prefix | Type | Example |
 |---|---|---|
-| `sk_` | Surrogate primary key | `sk_product` |
-| `nk_` | Natural key, also used in the fact to link to the dimensions | `nk_product` |
-| `fk_` | Composite foreign key (hashed) | `fk_geography` |
+| `sk_` | Surrogate primary key, always a hash | `sk_product` |
+| `nk_` | Natural key from the source | `nk_product` |
+| `fk_` | Foreign key, the `sk_` of a dimension | `fk_product` |
 | `dt_` | Date | `dt_order` |
 | `nm_` | Name | `nm_product` |
 | `ds_` | Description or attribute text | `ds_card_type` |
@@ -91,7 +103,11 @@ Orders go from 2011-05-31 to 2014-06-30. Therefore 2011 (May to December) and 20
 | `pc_` | Percentage | `pc_unit_price_discount` |
 | `is_` | Boolean | `is_online_order` |
 
-A single-column key does not go through `generate_surrogate_key`: the `sk_` of the dimension is the renamed natural column. The hash is only used for composite keys (`sk_geography` and `sk_order_sales_reason`).
+Every `sk_` is created with `generate_surrogate_key` over the natural key, in the model that owns the key (the dimension, or the fact for its own primary key). A foreign key is never hashed in the fact: the fact joins the dimension by the natural key and takes the `sk_` of the dimension as `fk_`. The facts keep only the natural keys of their own grain (`nk_sales_order` and `nk_sales_order_detail`). The date dimension is used several times by the same fact (`fk_order_date`, `fk_due_date`, `fk_ship_date`, `fk_quota_start_date` and `fk_quota_end_date`).
+
+### 11. Sales quota
+
+`salespersonquotahistory` has one quota per salesperson and quota date (quarterly, from 2011-05-31 to 2014-03-01, for 17 salespeople). A quota applies from its date until the day before the next quota of the same salesperson, and the latest quota applies until the last order date of the data. The net sales of the period are the order subtotals of the salesperson orders placed in it. All 3,806 salesperson orders fall in some quota period (US$ 80,487,704.18 in total). Online orders have no salesperson and are not part of the quota. Quota attainment is a ratio and is calculated outside the fact; overall, the net sales are about 84% of the quota (US$ 80.5 million against US$ 95.7 million).
 
 ## Quality controls
 
